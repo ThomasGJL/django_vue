@@ -10,8 +10,12 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
-from pathlib import Path
+import logging.config
 import os
+import yaml
+
+from pathlib import Path
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -19,14 +23,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
+load_dotenv()
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = ''
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -75,6 +80,17 @@ STATICFILES_DIRS = [
 
 WSGI_APPLICATION = 'django_vue.wsgi.application'
 
+#logger
+def logConfig():
+
+    with open(str(BASE_DIR) + '\log_config.yml', 'r', encoding='utf-8') as f:
+        file = f.read()
+        config = yaml.load(file, Loader=yaml.FullLoader)
+
+    logging.config.dictConfig(config)
+    logger = logging.getLogger('simple')
+
+    return logger
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
