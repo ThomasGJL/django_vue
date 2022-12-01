@@ -15,10 +15,17 @@ Including another URLconf
 """
 from django.urls import re_path as url
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from django.views.generic.base import TemplateView
+
+from rest_framework.routers import DefaultRouter, SimpleRouter
+from book.views import BookViewSet
+
+router = DefaultRouter()
+router.register(r'booklist', BookViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    url(r'', TemplateView.as_view(template_name="index.html"))
+    url(r'index/', TemplateView.as_view(template_name="index.html")),
+    url(r'^api/', include((router.urls, 'api'), namespace='api')),
 ]
